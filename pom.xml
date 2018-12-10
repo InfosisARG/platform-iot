@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.infosisarg</groupId>
+	<artifactId>platform-iot</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>platform-iot-shared-api</module>
+		<module>platform-iot-main-app</module>
+		<!-- Plugins -->
+		<module>plugin-coap</module>
+		<module>plugin-web</module>
+		<module>plugin-example</module>
+	</modules>
+
+</project>
