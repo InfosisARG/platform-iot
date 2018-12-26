@@ -37,14 +37,14 @@
 				<h1>Plugin Manager</h1>
 
 				<h:form role="form" StyleClass="form-inline">
-					<h:commandButton value="Reload" action="#{pluginsMBean.reload}" styleClass="btn btn-primary" />
+					<h:commandButton value="Reload" action="#{(pluginsMBean.reload())}" styleClass="btn btn-primary" />
 				</h:form>
 
 				<h:dataTable value="#{pluginsMBean.plugins}" var="plugin" styleClass="table table-striped">
 					<h:column>
 						<f:facet name="header">Plugin ID</f:facet>
-						<h:outputLabel rendered="#{pluginsMBean.isWeb(plugin.descriptor.pluginId)}" style="font-weight:normal"><a href="plugins/#{plugin.descriptor.pluginId}">#{plugin.descriptor.pluginId}</a></h:outputLabel>
-						<h:outputLabel rendered="#{!pluginsMBean.isWeb(plugin.descriptor.pluginId)}" style="font-weight:normal">#{plugin.descriptor.pluginId}</h:outputLabel>
+						<h:outputLabel rendered="#{(pluginsMBean.isWeb(plugin.descriptor.pluginId)}" style="font-weight:normal"><a href="plugins/#{plugin.descriptor.pluginId}">#{plugin.descriptor.pluginId}</a></h:outputLabel>
+						<h:outputLabel rendered="#{!(pluginsMBean.isWeb(plugin.descriptor.pluginId))}" style="font-weight:normal">#{plugin.descriptor.pluginId}</h:outputLabel>
 					</h:column>
 					<h:column>
 						<f:facet name="header">Plugin Descriptor</f:facet>#{plugin.descriptor.pluginDescription}
@@ -61,8 +61,8 @@
 					<h:column>
 						<f:facet name="header">Operations</f:facet>
 						<h:form>
-							<h:commandLink rendered="#{pluginsMBean.isActive(plugin)}" action="#{pluginsMBean.disable(plugin)}">Disable</h:commandLink>&nbsp;&nbsp;
-                            <h:commandLink rendered="#{!pluginsMBean.isActive(plugin)}" action="#{pluginsMBean.enable(plugin)}">Enable</h:commandLink>&nbsp;&nbsp;
+							<h:commandLink rendered="#{(pluginsMBean.isActive(plugin))}" action="#{pluginsMBean.disable(plugin)}">Disable</h:commandLink>&nbsp;&nbsp;
+                            <h:commandLink rendered="#{(!pluginsMBean.isActive(plugin))}" action="#{pluginsMBean.enable(plugin)}">Enable</h:commandLink>&nbsp;&nbsp;
                             <h:commandLink action="#{pluginsMBean.delete(plugin)}">Delete</h:commandLink>&nbsp;&nbsp;
                         </h:form>
 					</h:column>
