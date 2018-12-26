@@ -9,13 +9,15 @@
 
 	<properties>
 		<project.version>1.0.0</project.version>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 
 	<organization>
 		<name>Infosis</name>
 		<url>https://infosis.com.ar</url>
 	</organization>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.infosisarg</groupId>
