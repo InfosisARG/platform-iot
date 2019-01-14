@@ -9,6 +9,8 @@
 
 	<properties>
 		<project.version>1.0.0</project.version>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 
 	<organization>

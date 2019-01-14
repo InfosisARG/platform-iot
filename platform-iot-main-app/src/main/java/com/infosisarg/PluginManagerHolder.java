@@ -14,10 +14,24 @@ import com.infosisarg.consumer.mq.MqConsumer;
 import com.infosisarg.producer.ProducerFactory;
 
 public class PluginManagerHolder {
-	private static PluginManager pluginManager = null;
-	private static final Logger logger = LoggerFactory.getLogger(PluginManagerHolder.class);
+	private PluginManager pluginManager = null;
+	private final Logger logger = LoggerFactory.getLogger(PluginManagerHolder.class);
+	private Broker broker;
+	
+	private static PluginManagerHolder instance;
+	
+	private PluginManagerHolder() {
+	}
+	
+	public static PluginManagerHolder getInstance() {
+		if (null == instance) {
+			instance = new PluginManagerHolder();
+		}
+		return instance;
+	}
 
-	static void init(String pluginsHome) {
+	public void init(String pluginsHome, Broker broker) {
+		this.broker = broker;
 		if (pluginsHome != null) {
 			pluginManager = new DefaultPluginManager(new File(pluginsHome).toPath()) {
 				@Override
@@ -36,7 +50,7 @@ public class PluginManagerHolder {
 
 	}
 
-	public static PluginManager getPluginManager() {
+	public PluginManager getPluginManager() {
 		if (pluginManager == null) {
 			logger.error("pf4j-web: you must add the PluginManagerInitializer in web.xml.");
 			throw new RuntimeException("You must add the PluginManagerInitializer in web.xml.");
@@ -44,21 +58,29 @@ public class PluginManagerHolder {
 		return pluginManager;
 	}
 
-	public static void initPlugins() {
+	public void initPlugins() {
 		pluginManager.getExtensions(PluginInterface.class).forEach(plugin -> init(plugin));
 	}
 
-	public static void initPlugin(String pluginId) {
+	public void initPlugin(String pluginId) {
 		pluginManager.getExtensions(PluginInterface.class, pluginId).forEach(plugin -> init(plugin));
 	}
 
-	private static void init(PluginInterface plugin) {
+	private void init(PluginInterface plugin) {
 		plugin.setProducer(ProducerFactory.getProducer());
 
 		if (plugin.register() != null) {
 			new MqConsumer().addConsumer(plugin);
 		}
 
+	}
+
+	public Broker getBroker() {
+		return broker;
+	}
+
+	public void setBroker(Broker broker) {
+		this.broker = broker;
 	}
 
 }

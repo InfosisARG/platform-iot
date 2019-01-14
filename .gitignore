@@ -16,7 +16,6 @@ local.properties
 .apt_generated
 .classpath
 .factorypath
-.project
 .settings
 .springBeans
 .sts4-cache
@@ -34,3 +33,4 @@ local.properties
 /dist/
 /nbdist/
 /.nb-gradle/
+*.DS_Store

@@ -15,6 +15,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.pf4j.PluginState;
 import org.pf4j.PluginWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.infosisarg.PluginManagerHolder;
 import com.infosisarg.api.PluginWebInterface;
@@ -23,16 +25,17 @@ import com.infosisarg.api.PluginWebInterface;
 @SessionScoped
 public class PluginsMBean implements Serializable {
     private static final long serialVersionUID = 7473027855852017369L;
+    private static final Logger logger = LoggerFactory.getLogger(PluginsMBean.class);
 
     public List<PluginWrapper> getPlugins() {
-        return PluginManagerHolder.getPluginManager().getPlugins();
+        return PluginManagerHolder.getInstance().getPluginManager().getPlugins();
     }
     
     public Boolean isWeb(String pluginId) {
     	if(pluginId!=null && !pluginId.isEmpty()) {
-    		List extensions = PluginManagerHolder.getPluginManager().getExtensions(pluginId);
+    		List extensions = PluginManagerHolder.getInstance().getPluginManager().getExtensions(pluginId);
     		if(extensions != null && !extensions.isEmpty()) {
-		    	if(PluginManagerHolder.getPluginManager().getExtensions(pluginId).get(0) instanceof PluginWebInterface) {
+		    	if(PluginManagerHolder.getInstance().getPluginManager().getExtensions(pluginId).get(0) instanceof PluginWebInterface) {
 					return true;
 				}
 	    	}
@@ -41,7 +44,7 @@ public class PluginsMBean implements Serializable {
     }
     
     public List<PluginWebInterface> getPluginsWeb() {
-        return PluginManagerHolder.getPluginManager().getExtensions(PluginWebInterface.class);
+        return PluginManagerHolder.getInstance().getPluginManager().getExtensions(PluginWebInterface.class);
     }
     
     public boolean isActive(PluginWrapper pluginWrapper) {
@@ -50,29 +53,29 @@ public class PluginsMBean implements Serializable {
     }
 
     public String disable(PluginWrapper pluginWrapper) {
-        PluginManagerHolder.getPluginManager().stopPlugin(pluginWrapper.getPluginId());
+        PluginManagerHolder.getInstance().getPluginManager().stopPlugin(pluginWrapper.getPluginId());
         return "";
     }
 
     public String delete(PluginWrapper pluginWrapper) {
-        PluginManagerHolder.getPluginManager().deletePlugin(pluginWrapper.getPluginId());
+        PluginManagerHolder.getInstance().getPluginManager().deletePlugin(pluginWrapper.getPluginId());
         return "";
     }
 
     public String enable(PluginWrapper pluginWrapper) {
-        PluginManagerHolder.getPluginManager().enablePlugin(pluginWrapper.getPluginId());
-        PluginManagerHolder.getPluginManager().startPlugin(pluginWrapper.getPluginId());
-        PluginManagerHolder.initPlugin(pluginWrapper.getPluginId());
+        PluginManagerHolder.getInstance().getPluginManager().enablePlugin(pluginWrapper.getPluginId());
+        PluginManagerHolder.getInstance().getPluginManager().startPlugin(pluginWrapper.getPluginId());
+        PluginManagerHolder.getInstance().initPlugin(pluginWrapper.getPluginId());
         return "";
     }
 
     public void reload() {
-    	PluginManagerHolder.getPluginManager().getPlugins().forEach(p -> PluginManagerHolder.getPluginManager().unloadPlugin(p.getPluginId()));
-    	PluginManagerHolder.getPluginManager().loadPlugins();
-    	PluginManagerHolder.getPluginManager().getPlugins().forEach(p -> {
-    		PluginManagerHolder.getPluginManager().enablePlugin(p.getPluginId());
-    		PluginManagerHolder.getPluginManager().startPlugin(p.getPluginId());
-    		PluginManagerHolder.initPlugin(p.getPluginId());
+    	PluginManagerHolder.getInstance().getPluginManager().getPlugins().forEach(p -> PluginManagerHolder.getInstance().getPluginManager().unloadPlugin(p.getPluginId()));
+    	PluginManagerHolder.getInstance().getPluginManager().loadPlugins();
+    	PluginManagerHolder.getInstance().getPluginManager().getPlugins().forEach(p -> {
+    		PluginManagerHolder.getInstance().getPluginManager().enablePlugin(p.getPluginId());
+    		PluginManagerHolder.getInstance().getPluginManager().startPlugin(p.getPluginId());
+    		PluginManagerHolder.getInstance().initPlugin(p.getPluginId());
 		});
     	
     }
@@ -81,15 +84,16 @@ public class PluginsMBean implements Serializable {
 
     public void submit() throws IOException {
         String fileName = FilenameUtils.getName(uploadedFile.getName());
-        String pluginsHome = PluginManagerHolder.getPluginManager().getPluginsRoot().toString();
+        String pluginsHome = PluginManagerHolder.getInstance().getPluginManager().getPluginsRoot().toString();
         byte[] bytes = uploadedFile.getBytes();
         FileOutputStream out = new FileOutputStream(pluginsHome + "/" + fileName);
+        logger.info("uploading file: " + fileName + " destination: " + pluginsHome + "/" + fileName);
         out.write(bytes);
         out.close();
-        String newPluginID = PluginManagerHolder.getPluginManager().loadPlugin(new File(pluginsHome + "/" + fileName).toPath());
-        PluginManagerHolder.getPluginManager().enablePlugin(newPluginID);
-        PluginManagerHolder.getPluginManager().startPlugin(newPluginID);
-        PluginManagerHolder.initPlugin(newPluginID);
+        String newPluginID = PluginManagerHolder.getInstance().getPluginManager().loadPlugin(new File(pluginsHome + "/" + fileName).toPath());
+        PluginManagerHolder.getInstance().getPluginManager().enablePlugin(newPluginID);
+        PluginManagerHolder.getInstance().getPluginManager().startPlugin(newPluginID);
+        PluginManagerHolder.getInstance().initPlugin(newPluginID);
         
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(String.format("Plugin '%s'  successfully installed!", fileName)));
     }

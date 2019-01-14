@@ -12,10 +12,15 @@
 		<param-value>Development</param-value>
 	</context-param>
 
-	<!-- <context-param> -->
-	<!--	<param-name>pf4j.pluginsDir</param-name> -->
-	<!--	<param-value>/path/to/plugins</param-value> -->
-	<!-- </context-param> -->
+	<context-param>
+		<param-name>pf4j.pluginsDir</param-name>
+		<param-value>/Users/zaca/projects/infosis/platform-iot/pluginHome/</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>platform.broker</param-name>
+		<param-value>JMS</param-value>
+	</context-param>
 
 	<welcome-file-list>
 		<welcome-file>plugins.xhtml</welcome-file>

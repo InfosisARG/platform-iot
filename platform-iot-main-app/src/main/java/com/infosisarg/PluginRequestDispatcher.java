@@ -17,7 +17,7 @@ public class PluginRequestDispatcher extends HttpServlet {
 		String[] paths = path.split("/");
 		try {
 			try {
-				PluginWebInterface plugin = (PluginWebInterface) PluginManagerHolder.getPluginManager().getExtensions(paths[2]).get(0);
+				PluginWebInterface plugin = (PluginWebInterface) PluginManagerHolder.getInstance().getPluginManager().getExtensions(paths[2]).get(0);
 				plugin.requestManager(request, response);
 			} catch (ArrayIndexOutOfBoundsException ex) {
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No se especificó el nombre del plugin");

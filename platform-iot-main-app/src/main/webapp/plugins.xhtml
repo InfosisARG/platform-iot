@@ -43,7 +43,7 @@
 				<h:dataTable value="#{pluginsMBean.plugins}" var="plugin" styleClass="table table-striped">
 					<h:column>
 						<f:facet name="header">Plugin ID</f:facet>
-						<h:outputLabel rendered="#{(pluginsMBean.isWeb(plugin.descriptor.pluginId)}" style="font-weight:normal"><a href="plugins/#{plugin.descriptor.pluginId}">#{plugin.descriptor.pluginId}</a></h:outputLabel>
+						<h:outputLabel rendered="#{(pluginsMBean.isWeb(plugin.descriptor.pluginId))}" style="font-weight:normal"><a href="plugins/#{plugin.descriptor.pluginId}">#{plugin.descriptor.pluginId}</a></h:outputLabel>
 						<h:outputLabel rendered="#{!(pluginsMBean.isWeb(plugin.descriptor.pluginId))}" style="font-weight:normal">#{plugin.descriptor.pluginId}</h:outputLabel>
 					</h:column>
 					<h:column>

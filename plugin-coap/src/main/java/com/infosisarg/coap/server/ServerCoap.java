@@ -8,15 +8,19 @@ import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.core.network.EndpointManager;
 import org.eclipse.californium.core.network.config.NetworkConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.infosisarg.coap.plugin.CoapExtension;
 import com.infosisarg.coap.server.resources.MessageResource;
 
 public class ServerCoap extends CoapServer {
+	private final static Logger log = LoggerFactory.getLogger(ServerCoap.class);
 	private static final int COAP_PORT = NetworkConfig.getStandard().getInt(NetworkConfig.Keys.COAP_PORT);
 
 	private static ServerCoap server;
 	private CoapExtension coapExtension;
+	
 
 	public static void initialize() {
 		server = new ServerCoap();
@@ -53,6 +57,7 @@ public class ServerCoap extends CoapServer {
 	}
 
 	public boolean messageArrived(String message) {
-		return this.coapExtension.send("test",message);
+		log.debug("Arrivo de mensaje: " + message);
+		return this.coapExtension.send(message);
 	}
 }

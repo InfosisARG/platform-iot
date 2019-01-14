@@ -15,11 +15,16 @@ public class ClientCoap extends CoapServer {
 	public static void main(String[] args) {
 		CoapClient client = new CoapClient("coap://localhost:5683/message");
 		Random random = new Random();
-
-		while(true) {
+		int ejecuciones = 0;
+		int i = 0;
+		if(args.length > 0) {
+			ejecuciones = Integer.parseInt(args[0]);
+		}
+		while(i<ejecuciones) {
 			try {
 				Thread.sleep(random.nextInt(6000));
 				System.out.println(client.put(firstNames[random.nextInt(60)] + " " + lastNames[random.nextInt(60)] , 0).getResponseText());
+				i++;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

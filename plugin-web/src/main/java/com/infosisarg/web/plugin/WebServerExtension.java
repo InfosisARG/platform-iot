@@ -17,15 +17,17 @@ import com.infosisarg.api.PluginWebInterface;
 public class WebServerExtension extends PluginWebInterface {
 
 	private List<String> messages = new ArrayList<String>();
+	private String sendTOPIC = "WEB";
 
 	public WebServerExtension() {
 		super("WEB SERVER");
+		this.addReceiveTopic("CoAP");
 	}
 
 
 	@Override
-	public String register() {
-		return "test";
+	public List<String> register() {
+		return this.getReceiveTopics();
 	}
 
 	@Override
@@ -132,6 +134,11 @@ public class WebServerExtension extends PluginWebInterface {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String getSendTopic() {
+		return this.sendTOPIC;
 	}
 	
 }

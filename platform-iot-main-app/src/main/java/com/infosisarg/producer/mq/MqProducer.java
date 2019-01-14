@@ -11,19 +11,20 @@ import javax.jms.Session;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
 
+import com.infosisarg.api.PlatformMessage;
 import com.infosisarg.api.Producer;
 
 public class MqProducer implements Producer {
 
-	public boolean send(String topic, String payload) {
+	public boolean send(PlatformMessage message) {
 		try {
 			ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-			Destination destination = new ActiveMQTopic(topic);
+			Destination destination = new ActiveMQTopic(message.getDestination());
 			Connection connection;
 			connection = connectionFactory.createConnection();
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			try {
-				Message msg = session.createTextMessage(payload);
+				Message msg = session.createTextMessage(message.getPayload());
 				MessageProducer producer = session.createProducer(destination);
 				producer.send(msg);
 				session.close();
