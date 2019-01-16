@@ -1,7 +1,5 @@
 package com.infosisarg.api;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.pf4j.ExtensionPoint;
@@ -10,11 +8,12 @@ public abstract class PluginInterface implements ExtensionPoint {
 	private Producer producer;
 	private Consumer consumer;
 	private String name;
-	private final List<String> receiveTOPICS;
+	
+	private List<String> receiveTopics;
+	private String sendTopic;
 	
 	public PluginInterface(String name) {
 		this.name = name;
-		receiveTOPICS = new ArrayList<String>();
 	}
 
 	public String getName() {
@@ -45,14 +44,19 @@ public abstract class PluginInterface implements ExtensionPoint {
 		return this.getProducer().send(new PlatformMessage(this.getSendTopic(), message));
 	}
 	
-	public abstract String getSendTopic();
-
-	public List<String> getReceiveTopics(){
-		return receiveTOPICS;
+	public String getSendTopic() {
+		return this.sendTopic;
 	}
 	
-	public boolean addReceiveTopic(String topic) {
-		return this.receiveTOPICS.add(topic);
+	public void setSendTopic(String topic) {
+		this.sendTopic = topic;
+	}
+	public void setReceiveTopics(List<String> topics) {
+		this.receiveTopics = topics;
+	}
+
+	public List<String> getReceiveTopics(){
+		return this.receiveTopics;
 	}
 
 	/**

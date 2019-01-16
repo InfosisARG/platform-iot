@@ -2,9 +2,13 @@ package com.infosisarg;
 
 import java.io.File;
 
+import org.pf4j.CompoundPluginDescriptorFinder;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ExtensionFactory;
+import org.pf4j.ManifestPluginDescriptorFinder;
+import org.pf4j.PluginDescriptorFinder;
 import org.pf4j.PluginManager;
+import org.pf4j.PluginWrapper;
 import org.pf4j.SingletonExtensionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +42,13 @@ public class PluginManagerHolder {
 				protected ExtensionFactory createExtensionFactory() {
 					return new SingletonExtensionFactory();
 				}
+				
+				@Override
+			    protected PluginDescriptorFinder createPluginDescriptorFinder() {
+			        return new CompoundPluginDescriptorFinder()
+			            .add(new PlatformPropertiesPluginDescriptorFinder())
+			            .add(new ManifestPluginDescriptorFinder());
+			    }
 			};
 		} else {
 			pluginManager = new DefaultPluginManager() {
@@ -45,6 +56,13 @@ public class PluginManagerHolder {
 				protected ExtensionFactory createExtensionFactory() {
 					return new SingletonExtensionFactory();
 				}
+				
+				@Override
+			    protected PluginDescriptorFinder createPluginDescriptorFinder() {
+			        return new CompoundPluginDescriptorFinder()
+			            .add(new PlatformPropertiesPluginDescriptorFinder())
+			            .add(new ManifestPluginDescriptorFinder());
+			    }
 			};
 		}
 
@@ -59,18 +77,22 @@ public class PluginManagerHolder {
 	}
 
 	public void initPlugins() {
-		pluginManager.getExtensions(PluginInterface.class).forEach(plugin -> init(plugin));
+		//pluginManager.getExtensions(PluginInterface.class).forEach(extension -> {init(extension)});
+		pluginManager.getPlugins().forEach(plugin -> initPlugin(plugin.getPluginId()));
 	}
 
 	public void initPlugin(String pluginId) {
-		pluginManager.getExtensions(PluginInterface.class, pluginId).forEach(plugin -> init(plugin));
+		PluginWrapper p = pluginManager.getPlugin(pluginId);
+		pluginManager.getExtensions(PluginInterface.class, pluginId).forEach(extension -> init(extension,(PlatformPluginDescriptor)p.getDescriptor()));
 	}
 
-	private void init(PluginInterface plugin) {
-		plugin.setProducer(ProducerFactory.getProducer());
+	private void init(PluginInterface extension, PlatformPluginDescriptor descriptor) {
+		extension.setProducer(ProducerFactory.getProducer());
+		extension.setSendTopic(descriptor.getSendTopic());
+		extension.setReceiveTopics(descriptor.getReceiveTopics());
 
-		if (plugin.register() != null) {
-			new MqConsumer().addConsumer(plugin);
+		if (extension.register() != null) {
+			new MqConsumer().addConsumer(extension);
 		}
 
 	}

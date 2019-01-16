@@ -27,9 +27,4 @@ public class PluginExtension extends PluginInterface {
 		System.out.println("Receive : " + message.toString());
 	}
 
-	@Override
-	public String getSendTopic() {
-		return "example-topic";
-	}
-
 }
