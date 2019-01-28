@@ -1,4 +1,4 @@
-package com.infosisarg;
+package com.infosisarg.api;
 
 import java.util.Arrays;
 import java.util.List;

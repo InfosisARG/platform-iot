@@ -14,6 +14,7 @@
 		<!-- Plugins -->
 		<module>plugin-coap</module>
 		<module>plugin-web</module>
+		<module>plugin-web2</module>
 		<module>plugin-example</module>
 	</modules>
 

@@ -11,15 +11,22 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.infosisarg.api.Consumer;
 import com.infosisarg.api.PluginInterface;
 
 public class MqConsumer implements Consumer {
 
-	private static List<TextMessage> messages = new ArrayList<TextMessage>();
+	private static final Logger logger = LoggerFactory.getLogger(com.infosisarg.mbean.PluginsMBean.class);
+	
+	private List<TextMessage> messages = new ArrayList<TextMessage>();
 
-	private static List<MessageConsumer> consumers;
+	private List<MessageConsumer> consumers;
+	
+	
+	Connection connection = null;
 	
 	public MqConsumer() {
 		if (consumers == null) {
@@ -53,8 +60,7 @@ public class MqConsumer implements Consumer {
 
 	public void addConsumer(PluginInterface plugin) {
 		try {
-			Session session;
-			session = getConection().createSession(false, Session.AUTO_ACKNOWLEDGE);
+			Session session = getConection().createSession(false, Session.AUTO_ACKNOWLEDGE);
 			for (Iterator<String> iterator = plugin.getReceiveTopics().iterator(); iterator.hasNext();) {
 				MessageConsumer consumer = session.createConsumer(session.createTopic(iterator.next()));
 				consumer.setMessageListener(message -> {
@@ -65,8 +71,17 @@ public class MqConsumer implements Consumer {
 					}
 				});
 			}
+			
 		} catch (JMSException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void removeConsumer() {
+		try {
+			connection.close();
+		} catch (JMSException e) {
+			logger.error("Broker conection could not be closed. " + e.getMessage());
 		}
 	}
 	
@@ -75,16 +90,27 @@ public class MqConsumer implements Consumer {
 	}
 
 	private Connection getConection() {
-		Connection connection = null;
 		try {
 			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-			connectionFactory.setBrokerURL("tcp://localhost:61616");
+			connectionFactory.setBrokerURL("tcp://localhost:61617");
 			connection = connectionFactory.createConnection();
 			connection.start();
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
 		return connection;
+	}
+	
+	@Override
+	public void stop() {
+		for (Iterator<MessageConsumer> iterator = consumers.iterator(); iterator.hasNext();) {
+			MessageConsumer messageConsumer = iterator.next();
+			try {
+				messageConsumer.close();
+			} catch (JMSException e) {
+				logger.warn("Consumer couldnt be closed. ");
+			}
+		}
 	}
 
 }

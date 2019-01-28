@@ -1,4 +1,4 @@
-package com.infosisarg;
+package com.infosisarg.api;
 
 import java.util.Properties;
 
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class PlatformPropertiesPluginDescriptorFinder extends PropertiesPluginDescriptorFinder{
 	
-	private final Logger logger = LoggerFactory.getLogger(PluginManagerHolder.class);
+	private final Logger logger = LoggerFactory.getLogger(com.infosisarg.api.PlatformPropertiesPluginDescriptorFinder.class);
 
 	@Override
 	protected PlatformPluginDescriptor createPluginDescriptorInstance() {

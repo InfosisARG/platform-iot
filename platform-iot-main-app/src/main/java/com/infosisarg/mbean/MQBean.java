@@ -2,6 +2,7 @@ package com.infosisarg.mbean;
 
 import java.util.List;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.jms.TextMessage;
 
@@ -9,7 +10,8 @@ import com.infosisarg.api.Consumer;
 import com.infosisarg.consumer.ConsumerFactory;
 import com.infosisarg.consumer.mq.MqConsumer;
 
-@ManagedBean(name = "MQBean")
+@ManagedBean(name = "MQBean", eager = true)
+@ApplicationScoped
 public class MQBean {
 	Consumer consumer;
 

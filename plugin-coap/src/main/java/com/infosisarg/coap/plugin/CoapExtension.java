@@ -1,10 +1,6 @@
 package com.infosisarg.coap.plugin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.pf4j.Extension;
-import org.pf4j.PluginManager;
 
 import com.infosisarg.api.PluginInterface;
 import com.infosisarg.coap.server.ServerCoap;
@@ -13,7 +9,16 @@ import com.infosisarg.coap.server.ServerCoap;
 public class CoapExtension extends PluginInterface {
 
 	public CoapExtension() {
-		super("CoAP");
+		super("coap-server");
+		try {
+			ServerCoap.getInstance().setCoapExtension(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public CoapExtension(String name) {
+		super(name);
 		try {
 			ServerCoap.getInstance().setCoapExtension(this);
 		} catch (Exception e) {

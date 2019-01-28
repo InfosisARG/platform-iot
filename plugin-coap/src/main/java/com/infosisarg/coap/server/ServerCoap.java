@@ -15,7 +15,7 @@ import com.infosisarg.coap.plugin.CoapExtension;
 import com.infosisarg.coap.server.resources.MessageResource;
 
 public class ServerCoap extends CoapServer {
-	private final static Logger log = LoggerFactory.getLogger(ServerCoap.class);
+	private final static Logger log = LoggerFactory.getLogger(com.infosisarg.coap.server.ServerCoap.class);
 	private static final int COAP_PORT = NetworkConfig.getStandard().getInt(NetworkConfig.Keys.COAP_PORT);
 
 	private static ServerCoap server;

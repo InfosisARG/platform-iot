@@ -1,6 +1,8 @@
 package com.infosisarg;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 import org.pf4j.CompoundPluginDescriptorFinder;
 import org.pf4j.DefaultPluginManager;
@@ -13,13 +15,16 @@ import org.pf4j.SingletonExtensionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.infosisarg.api.Broker;
+import com.infosisarg.api.PlatformPlugin;
+import com.infosisarg.api.PlatformPropertiesPluginDescriptorFinder;
 import com.infosisarg.api.PluginInterface;
-import com.infosisarg.consumer.mq.MqConsumer;
-import com.infosisarg.producer.ProducerFactory;
 
 public class PluginManagerHolder {
+	
+	private final Logger logger = LoggerFactory.getLogger(com.infosisarg.PluginManagerHolder.class);
+
 	private PluginManager pluginManager = null;
-	private final Logger logger = LoggerFactory.getLogger(PluginManagerHolder.class);
 	private Broker broker;
 	
 	private static PluginManagerHolder instance;
@@ -68,6 +73,7 @@ public class PluginManagerHolder {
 
 	}
 
+	/**
 	public PluginManager getPluginManager() {
 		if (pluginManager == null) {
 			logger.error("pf4j-web: you must add the PluginManagerInitializer in web.xml.");
@@ -75,18 +81,34 @@ public class PluginManagerHolder {
 		}
 		return pluginManager;
 	}
+	**/
 
 	public void initPlugins() {
+		this.pluginManager.loadPlugins();
+		logger.debug("Plugins loaded.");
+	
 		//pluginManager.getExtensions(PluginInterface.class).forEach(extension -> {init(extension)});
-		pluginManager.getPlugins().forEach(plugin -> initPlugin(plugin.getPluginId()));
+		
+		this.pluginManager.startPlugins();
+		pluginManager.getPlugins().forEach(plugin -> initPlugin(plugin));
+		//pluginManager.getExtensions(PluginInterface.class).forEach(extension -> init(extension));
+		logger.debug("Plugins started.");
+		logger.debug("contextInitialized end.");
+		
 	}
 
-	public void initPlugin(String pluginId) {
+	public void initPlugin(PluginWrapper plugin) {
+		((PlatformPlugin)plugin.getPlugin()).init(broker);
+	}
+	
+	public void initPlugin(String  pluginId) {
 		PluginWrapper p = pluginManager.getPlugin(pluginId);
-		pluginManager.getExtensions(PluginInterface.class, pluginId).forEach(extension -> init(extension,(PlatformPluginDescriptor)p.getDescriptor()));
+		initPlugin(p);
 	}
 
-	private void init(PluginInterface extension, PlatformPluginDescriptor descriptor) {
+	/**
+	 * private void init(PluginInterface extension, PlatformPluginDescriptor descriptor) {
+	
 		extension.setProducer(ProducerFactory.getProducer());
 		extension.setSendTopic(descriptor.getSendTopic());
 		extension.setReceiveTopics(descriptor.getReceiveTopics());
@@ -94,8 +116,7 @@ public class PluginManagerHolder {
 		if (extension.register() != null) {
 			new MqConsumer().addConsumer(extension);
 		}
-
-	}
+**/
 
 	public Broker getBroker() {
 		return broker;
@@ -104,5 +125,13 @@ public class PluginManagerHolder {
 	public void setBroker(Broker broker) {
 		this.broker = broker;
 	}
+
+	public PluginManager getPluginManager() {
+		return pluginManager;
+	}
+	
+	
+	
+	
 
 }

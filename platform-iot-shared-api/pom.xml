@@ -16,8 +16,8 @@
 		<project.version>1.0.0</project.version>
 		<pf4j.version>2.4.0</pf4j.version>
 
-		<maven.compiler.source>1.6</maven.compiler.source>
-    	<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+    	<maven.compiler.target>1.8</maven.compiler.target>
 
 		<groupId>${project.groupId}</groupId>
 		<artifactId>${project.artifactId}</artifactId>

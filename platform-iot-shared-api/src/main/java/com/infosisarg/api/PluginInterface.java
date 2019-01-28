@@ -31,15 +31,16 @@ public abstract class PluginInterface implements ExtensionPoint {
 	public Producer getProducer() {
 		return this.producer;
 	}
-	
+
 	public void setConsumer(Consumer c) {
 		this.consumer = c;
+		consumer.addConsumer(this);
 	}
 	
 	public Consumer getConsumer() {
 		return this.consumer;
 	}
-
+	
 	public boolean send(String message) {
 		return this.getProducer().send(new PlatformMessage(this.getSendTopic(), message));
 	}

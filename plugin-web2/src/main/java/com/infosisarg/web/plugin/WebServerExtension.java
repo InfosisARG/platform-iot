@@ -19,7 +19,7 @@ public class WebServerExtension extends PluginWebInterface {
 	private List<String> messages = new ArrayList<String>();
 
 	public WebServerExtension() {
-		super("WEB SERVER");
+		super("WEB SERVER2");
 	}
 
 
@@ -31,7 +31,6 @@ public class WebServerExtension extends PluginWebInterface {
 	@Override
 	public void receive(Object message) {
 		messages.add(message.toString());
-		this.send(message.toString() + " 2da vuelta");
 	}
 
 	@Override

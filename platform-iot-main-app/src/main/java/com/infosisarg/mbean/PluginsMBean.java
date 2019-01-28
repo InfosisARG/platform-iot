@@ -24,8 +24,9 @@ import com.infosisarg.api.PluginWebInterface;
 @ManagedBean(name = "pluginsMBean")
 @SessionScoped
 public class PluginsMBean implements Serializable {
-    private static final long serialVersionUID = 7473027855852017369L;
-    private static final Logger logger = LoggerFactory.getLogger(PluginsMBean.class);
+	
+	private static final Logger logger = LoggerFactory.getLogger(com.infosisarg.mbean.PluginsMBean.class);
+	private static final long serialVersionUID = 7473027855852017369L;
 
     public List<PluginWrapper> getPlugins() {
         return PluginManagerHolder.getInstance().getPluginManager().getPlugins();
@@ -65,7 +66,7 @@ public class PluginsMBean implements Serializable {
     public String enable(PluginWrapper pluginWrapper) {
         PluginManagerHolder.getInstance().getPluginManager().enablePlugin(pluginWrapper.getPluginId());
         PluginManagerHolder.getInstance().getPluginManager().startPlugin(pluginWrapper.getPluginId());
-        PluginManagerHolder.getInstance().initPlugin(pluginWrapper.getPluginId());
+        PluginManagerHolder.getInstance().initPlugin(pluginWrapper);
         return "";
     }
 
@@ -75,7 +76,7 @@ public class PluginsMBean implements Serializable {
     	PluginManagerHolder.getInstance().getPluginManager().getPlugins().forEach(p -> {
     		PluginManagerHolder.getInstance().getPluginManager().enablePlugin(p.getPluginId());
     		PluginManagerHolder.getInstance().getPluginManager().startPlugin(p.getPluginId());
-    		PluginManagerHolder.getInstance().initPlugin(p.getPluginId());
+    		PluginManagerHolder.getInstance().initPlugin(p);
 		});
     	
     }

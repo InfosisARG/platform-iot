@@ -18,7 +18,7 @@ public class MqProducer implements Producer {
 
 	public boolean send(PlatformMessage message) {
 		try {
-			ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+			ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61617");
 			Destination destination = new ActiveMQTopic(message.getDestination());
 			Connection connection;
 			connection = connectionFactory.createConnection();
