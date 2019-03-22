@@ -14,7 +14,7 @@
 
 	<context-param>
 		<param-name>pf4j.pluginsDir</param-name>
-		<param-value>/Users/zaca/projects/infosis/platform-iot/pluginHome/</param-value>
+		<param-value>/home/evo04/plugins</param-value>
 	</context-param>
 	
 	<context-param>

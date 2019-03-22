@@ -27,4 +27,8 @@ public class PluginExtension extends PluginInterface {
 		System.out.println("Receive : " + message.toString());
 	}
 
+	@Override
+	public boolean send(String message) {
+		return super.send(message);
+	}
 }
